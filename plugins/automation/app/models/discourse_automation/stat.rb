@@ -119,14 +119,15 @@ end
 # Table name: discourse_automation_stats
 #
 #  id               :bigint           not null, primary key
-#  automation_id    :bigint           not null
+#  average_run_time :float            not null
 #  date             :date             not null
 #  last_run_at      :datetime         not null
-#  total_time       :float            not null
-#  average_run_time :float            not null
-#  min_run_time     :float            not null
 #  max_run_time     :float            not null
+#  min_run_time     :float            not null
+#  total_errors     :integer          default(0), not null
 #  total_runs       :integer          not null
+#  total_time       :float            not null
+#  automation_id    :bigint           not null
 #
 # Indexes
 #
