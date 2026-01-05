@@ -322,7 +322,13 @@ class StateMachine {
     if (!stateConfig?.machines) {
       return null;
     }
-    return stateConfig.machines.find((m) => m.name === machineName) || null;
+
+    // Normalize to array if single object
+    const machinesArray = Array.isArray(stateConfig.machines)
+      ? stateConfig.machines
+      : [stateConfig.machines];
+
+    return machinesArray.find((m) => m.name === machineName) || null;
   }
 
   /**
@@ -378,8 +384,13 @@ class StateMachine {
     this.#silentMachines.clear();
 
     if (stateConfig?.machines) {
-      this.#currentStateMachines = stateConfig.machines;
-      for (const machineDef of stateConfig.machines) {
+      // Normalize to array if single object
+      const machinesArray = Array.isArray(stateConfig.machines)
+        ? stateConfig.machines
+        : [stateConfig.machines];
+
+      this.#currentStateMachines = machinesArray;
+      for (const machineDef of machinesArray) {
         this.nestedMachines[machineDef.name] = machineDef.initial;
         if (machineDef.silentOnly) {
           this.#silentMachines.add(machineDef.name);
@@ -523,7 +534,12 @@ class StateMachine {
       return null;
     }
 
-    for (const machineDef of currentStateConfig.machines) {
+    // Normalize to array if single object
+    const machinesArray = Array.isArray(currentStateConfig.machines)
+      ? currentStateConfig.machines
+      : [currentStateConfig.machines];
+
+    for (const machineDef of machinesArray) {
       const machineName = machineDef.name;
       const currentMachineState =
         this.getNestedMachineState(machineName) || machineDef.initial;
@@ -750,7 +766,12 @@ class StateMachine {
       return;
     }
 
-    for (const machineDef of currentStateConfig.machines) {
+    // Normalize to array if single object
+    const machinesArray = Array.isArray(currentStateConfig.machines)
+      ? currentStateConfig.machines
+      : [currentStateConfig.machines];
+
+    for (const machineDef of machinesArray) {
       const machineName = machineDef.name;
       const currentMachineState =
         this.getNestedMachineState(machineName) || machineDef.initial;
@@ -794,7 +815,12 @@ class StateMachine {
       return;
     }
 
-    const machineDef = currentStateConfig.machines.find(
+    // Normalize to array if single object
+    const machinesArray = Array.isArray(currentStateConfig.machines)
+      ? currentStateConfig.machines
+      : [currentStateConfig.machines];
+
+    const machineDef = machinesArray.find(
       (m) => m.name === machineName
     );
     if (!machineDef) {
@@ -830,7 +856,12 @@ class StateMachine {
       return;
     }
 
-    for (const machineDef of currentStateConfig.machines) {
+    // Normalize to array if single object
+    const machinesArray = Array.isArray(currentStateConfig.machines)
+      ? currentStateConfig.machines
+      : [currentStateConfig.machines];
+
+    for (const machineDef of machinesArray) {
       if (!machineDef.silentOnly) {
         continue;
       }
