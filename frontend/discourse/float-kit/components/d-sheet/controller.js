@@ -146,6 +146,22 @@ export default class Controller {
     return this.sheetMachines.getMachine("longRunning");
   }
 
+  get skipOpeningMachine() {
+    return this.sheetMachines.getMachine("skipOpening");
+  }
+
+  get skipClosingMachine() {
+    return this.sheetMachines.getMachine("skipClosing");
+  }
+
+  get backStuckMachine() {
+    return this.sheetMachines.getMachine("backStuck");
+  }
+
+  get frontStuckMachine() {
+    return this.sheetMachines.getMachine("frontStuck");
+  }
+
   /** @type {boolean} */
   isSwipeOngoing = false;
 
