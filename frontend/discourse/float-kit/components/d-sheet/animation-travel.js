@@ -189,10 +189,12 @@ export default class AnimationTravel {
       !hasProgressValues
     ) {
       if (c.currentState === "closing" && detentIndex === 0) {
-        c.handleStateTransition({ type: "NEXT" });
+        c.stateHelper.completeAnimation();
+        c.stateHelper.advanceAnimation();
       }
       if (c.currentState === "opening") {
-        c.handleStateTransition({ type: "NEXT" });
+        c.stateHelper.completeAnimation();
+        c.stateHelper.advanceAnimation();
       }
       return;
     }
@@ -254,24 +256,31 @@ export default class AnimationTravel {
     c.onTravelEnd?.();
 
     const { animationState } = c.stateHelper;
-    if (["opening", "stepping", "closing"].includes(animationState)) {
-      c.stateHelper.advanceAnimation();
+    const wasOpening = c.stateHelper.isOpening;
+    const wasClosing = c.stateHelper.isClosing;
+    const wasOpen = c.stateHelper.isOpen;
+    const shouldAdvancePosition =
+      c.stateHelper.isPositionFrontOpening() ||
+      c.stateHelper.isPositionFrontClosing();
+    const shouldAdvanceAnimation = ["opening", "stepping", "closing"].includes(
+      animationState
+    );
+    const wasStepping = c.stateHelper.isInAnimationState("stepping");
+
+    if (wasOpening || wasClosing) {
+      c.stateHelper.completeAnimation();
     }
 
-    if (
-      c.stateHelper.isPositionFrontOpening() ||
-      c.stateHelper.isPositionFrontClosing()
-    ) {
+    if (shouldAdvancePosition) {
       c.stateHelper.advancePosition();
       c.stackingAdapter?.notifyParentPositionMachineNext();
     }
 
-    if (c.stateHelper.isOpening || c.stateHelper.isClosing) {
-      c.stateHelper.completeAnimation();
-    } else if (
-      c.stateHelper.isOpen &&
-      c.stateHelper.isInAnimationState("stepping")
-    ) {
+    if (shouldAdvanceAnimation) {
+      c.stateHelper.advanceAnimation();
+    }
+
+    if (wasOpen && wasStepping) {
       c.updateTravelStatus("idleInside");
     }
   }

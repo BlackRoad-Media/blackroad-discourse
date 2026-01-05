@@ -644,17 +644,11 @@ export default class SheetRegistry extends Service {
     const scrollContainer = sheet.scrollContainer;
     const backdrop = sheet.backdrop;
     const view = sheet.view;
-    const content = sheet.content;
-
-    const isOnScrollContainer = scrollContainer === target;
-    const isOnBackdrop = backdrop === target;
-    const isOutsideView = view && !view.contains(target);
-    const isInsideContent = content?.contains(target);
 
     const isClickOutside =
-      isOnScrollContainer ||
-      isOnBackdrop ||
-      (isOutsideView && !isInsideContent);
+      scrollContainer === target ||
+      backdrop === target ||
+      (view && !view.contains(target));
 
     if (isClickOutside) {
       const behavior = this.processBehaviorHandler(

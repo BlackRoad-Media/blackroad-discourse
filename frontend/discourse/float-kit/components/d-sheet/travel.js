@@ -81,6 +81,10 @@ function buildKeyframesFromConfig(
   supportsLinear,
   stackingInfo = null
 ) {
+  if (!progressValues || progressValues.length === 0) {
+    return [];
+  }
+
   const adjustProgress = (progress) => {
     if (!stackingInfo) {
       return progress;
@@ -386,6 +390,15 @@ export function executeSheetTravel(config) {
   });
 
   const { progressValuesArray, duration, delay } = animation;
+
+  if (progressValuesArray.length === 0) {
+    setScrollPosition(scrollContainer, scrollAxis, positionToScrollTo);
+    setSegment([destinationDetent, destinationDetent]);
+    if (onTravelEnd) {
+      onTravelEnd();
+    }
+    return;
+  }
 
   const filteredProgressValues = [];
   for (let i = 0; i < progressValuesArray.length - 1; i += 8) {

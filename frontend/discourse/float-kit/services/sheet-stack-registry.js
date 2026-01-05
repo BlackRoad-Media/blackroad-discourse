@@ -109,9 +109,19 @@ export default class SheetStackRegistry extends Service {
     this.updateBelowSheetsInStack(stackId);
 
     if (parentSheet) {
-      const positionState = parentSheet.positionMachine?.current;
-      if (positionState?.startsWith("covered-")) {
-        parentSheet.sendToPositionMachine("GOTO_FRONT_IDLE");
+      const positionMachine = parentSheet.positionMachine;
+
+      if (
+        positionMachine?.matches("covered.status:going-down") ||
+        positionMachine?.matches("covered.status:going-up")
+      ) {
+        parentSheet.sendToPositionMachine("NEXT");
+        parentSheet.sendToPositionMachine("GOTO_front");
+      } else if (
+        positionMachine?.matches("covered.status:idle") ||
+        positionMachine?.matches("covered.status:indeterminate")
+      ) {
+        parentSheet.sendToPositionMachine("GOTO_front");
       }
     }
   }
@@ -308,15 +318,18 @@ export default class SheetStackRegistry extends Service {
       return;
     }
 
-    const parentPosition = parentSheet.positionMachine?.current;
+    const positionMachine = parentSheet.positionMachine;
 
     if (
-      parentPosition === "covered-going-down" ||
-      parentPosition === "covered-going-up"
+      positionMachine?.matches("covered.status:going-down") ||
+      positionMachine?.matches("covered.status:going-up")
     ) {
-      parentSheet.sendToPositionMachine("GOTO_FRONT_IDLE");
-    } else {
+      parentSheet.sendToPositionMachine("NEXT");
+      parentSheet.sendToPositionMachine("GOTO_front");
+    } else if (positionMachine?.matches("covered.status:idle")) {
       parentSheet.sendToPositionMachine("GO_UP");
+    } else if (positionMachine?.matches("covered.status:indeterminate")) {
+      parentSheet.sendToPositionMachine("GOTO_front");
     }
   }
 
