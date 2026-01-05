@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { next } from "@ember/runloop";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { createTweenFunction } from "./animation";
 import AnimationTravel from "./animation-travel";
@@ -160,6 +161,10 @@ export default class Controller {
 
   get frontStuckMachine() {
     return this.sheetMachines.getMachine("frontStuck");
+  }
+
+  get elementsReadyMachine() {
+    return this.sheetMachines.getMachine("elementsReady");
   }
 
   /** @type {boolean} */
@@ -338,17 +343,37 @@ export default class Controller {
    */
   #subscriptionDefinitions = [
     {
-      machine: "stateMachine",
-      state: "closed.status:preparing-opening",
-      handler: "handlePreparingOpening",
+      machine: "animationStateMachine",
+      state: "opening",
+      timing: "after-paint",
+      callback: () => {
+        requestAnimationFrame(() => {
+          this.stateMachine.send({
+            type: "READY_TO_OPEN",
+            skipOpening: false,
+          });
+        });
+      },
     },
-    { machine: "stateMachine", state: "opening", handler: "handleOpening" },
+    {
+      machine: "stateMachine",
+      state: "opening",
+      timing: "before-paint",
+      handler: "handleOpening",
+    },
+    {
+      machine: "elementsReadyMachine",
+      state: "true",
+      timing: "immediate",
+      guard: () => this.stateMachine.current === "opening",
+      callback: () => this.#startOpeningAnimation(),
+    },
     {
       machine: "stateMachine",
       state: "open",
       guard: () => {
         const msg = this.stateMachine.lastProcessedMessage;
-        return ["ANIMATION_COMPLETE", "PREPARED", "STEP"].includes(msg?.type);
+        return ["NEXT", "ANIMATION_COMPLETE", "PREPARED", "STEP", "READY_TO_OPEN"].includes(msg?.type);
       },
       callback: (message) => this.handleOpen(message),
     },
@@ -369,7 +394,10 @@ export default class Controller {
       timing: "before-paint",
       callback: () => {
         this.timeoutManager.clear("pendingFlush");
-        this.stateHelper.flushComplete();
+        this.stateMachine.send({
+          machine: "openness:closed.status",
+          type: "",
+        });
       },
     },
     {
@@ -378,13 +406,33 @@ export default class Controller {
       timing: "before-paint",
       callback: () => {
         this.timeoutManager.clear("pendingFlush");
-        this.stateHelper.flushComplete();
+        this.stateMachine.send({
+          machine: "openness:closed.status",
+          type: "",
+        });
+      },
+    },
+    {
+      machine: "stateMachine",
+      state: "closed.status:preparing-opening",
+      timing: "after-paint",
+      callback: () => {
+        this.animationStateMachine.send({
+          type: "OPEN_PREPARED",
+          skipOpening: false,
+        });
       },
     },
     {
       machine: "stateMachine",
       state: "closed.status:preparing-open",
-      handler: "handlePreparingOpen",
+      timing: "after-paint",
+      callback: () => {
+        this.animationStateMachine.send({
+          type: "OPEN_PREPARED",
+          skipOpening: true,
+        });
+      },
     },
     {
       machine: "positionMachine",
@@ -1004,42 +1052,63 @@ export default class Controller {
   }
 
   /**
-   * Handle the preparing-opening state.
-   * Sets up initial state and captures focus.
-   *
-   * @private
-   */
-  handlePreparingOpening() {
-    this.isPresented = true;
-    this.staging = "opening";
-    this.resetViewStyles();
-    this.updateTravelStatus("travellingIn");
-    this.focusManagement.capturePreviouslyFocusedElement();
-  }
-
-  /**
-   * Handle the preparing-open state (opening without animation).
-   *
-   * @private
-   */
-  handlePreparingOpen() {
-    this.isPresented = true;
-    this.resetViewStyles();
-    this.updateTravelStatus("idleInside");
-    this.focusManagement.capturePreviouslyFocusedElement();
-  }
-
-  /**
    * Handle the opening state.
-   * Begins enter animation and notifies parent sheet.
+   * Starts the enter animation and sends NEXT when complete.
+   * If elements aren't ready yet (tracked via elementsReady state machine),
+   * defers animation until ELEMENTS_REGISTERED is sent.
    *
    * @private
    */
   handleOpening() {
+    this.isPresented = true;
+    this.staging = "opening";
+    this.updateTravelStatus("travellingIn");
+    this.focusManagement.capturePreviouslyFocusedElement();
+
     this.longRunningMachine.send("TO_TRUE");
     this.longRunning = true;
     this.stateHelper.beginEnterAnimation(false);
     this.stackingAdapter.notifyParentOfOpening(false);
+
+    if (this.elementsReadyMachine.current === "true") {
+      this.#startOpeningAnimation();
+    }
+  }
+
+  /**
+   * Start the opening animation.
+   * Called from handleOpening or from element registration when deferred.
+   *
+   * @private
+   */
+  #startOpeningAnimation() {
+    this.resetViewStyles();
+    this.calculateDimensionsIfReady();
+    this.domAttributes.setHidden();
+    this.animationTravel.animateToDetent(this.targetDetent);
+  }
+
+  /**
+   * Send ELEMENTS_REGISTERED if all required elements are now present.
+   * Used by register methods to signal readiness for deferred animations.
+   * Deferred to next frame to avoid Ember auto-tracking issues.
+   *
+   * @private
+   */
+  #notifyElementsRegisteredIfReady() {
+    if (
+      this.view &&
+      this.scrollContainer &&
+      this.contentWrapper &&
+      this.elementsReadyMachine.current === "false"
+    ) {
+      // Defer to next run loop to avoid updating tracked state during render
+      next(() => {
+        if (this.elementsReadyMachine.current === "false") {
+          this.elementsReadyMachine.send("ELEMENTS_REGISTERED");
+        }
+      });
+    }
   }
 
   /**
@@ -1216,6 +1285,11 @@ export default class Controller {
     this.longRunning = false;
     this.staging = "none";
 
+    // Reset elementsReady state machine for next open cycle
+    if (this.elementsReadyMachine.current === "true") {
+      this.elementsReadyMachine.send("RESET");
+    }
+
     // Perform cleanup and restore focus
     this.cleanup();
     this.executeAutoFocusOnDismiss();
@@ -1242,16 +1316,13 @@ export default class Controller {
 
   /**
    * Calculate dimensions if all required elements are ready.
-   * Triggers dimension calculation and initial animation.
+   * Pure dimension calculation - no state transitions.
    */
   calculateDimensionsIfReady() {
-    const isPreparingOpening = this.stateMachine.matches("closed.status:preparing-opening");
-    const isPreparingOpen = this.stateMachine.matches("closed.status:preparing-open");
     const hasRequiredMarkers =
       this.detentsConfig === undefined || this.detentMarkers.length > 0;
 
     if (
-      (isPreparingOpening || isPreparingOpen) &&
       this.view &&
       this.content &&
       this.scrollContainer &&
@@ -1277,20 +1348,6 @@ export default class Controller {
       );
 
       this.setInitialScrollPosition();
-
-      if (isPreparingOpen) {
-        requestAnimationFrame(() => {
-          this.handleStateTransition({ type: "PREPARED" });
-          this.setScrollPositionToDetent(this.targetDetent);
-        });
-      } else {
-        this.domAttributes.setHidden();
-
-        requestAnimationFrame(() => {
-          this.handleStateTransition({ type: "PREPARED" });
-          this.animationTravel.animateToDetent(this.targetDetent);
-        });
-      }
     }
   }
 
@@ -1376,6 +1433,7 @@ export default class Controller {
     this.calculateDimensionsIfReady();
     this.setupResizeObserver();
     this.sheetRegistry?.recalculateInertOutside();
+    this.#notifyElementsRegisteredIfReady();
   }
 
   /**
@@ -1541,6 +1599,7 @@ export default class Controller {
   @action
   registerContentWrapper(contentWrapper) {
     this.contentWrapper = contentWrapper;
+    this.#notifyElementsRegisteredIfReady();
   }
 
   /**
@@ -1557,6 +1616,7 @@ export default class Controller {
     }
 
     this.calculateDimensionsIfReady();
+    this.#notifyElementsRegisteredIfReady();
   }
 
   /**
@@ -1922,10 +1982,11 @@ export default class Controller {
 
   /**
    * Open the sheet.
+   * Sends OPEN to staging machine (matches Silk's flow).
    */
   @action
   open() {
-    this.handleStateTransition({ type: "OPEN" });
+    this.animationStateMachine.send({ type: "OPEN" });
   }
 
   /**

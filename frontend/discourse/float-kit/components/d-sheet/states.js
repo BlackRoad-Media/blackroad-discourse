@@ -114,16 +114,23 @@ export const SHEET_MACHINES = [
     initial: "closed",
     states: {
       closed: {
+        messages: {
+          READY_TO_OPEN: [
+            {
+              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              target: "opening",
+            },
+            {
+              target: "open",
+            },
+          ],
+        },
         machines: [
           {
             name: "status",
             initial: "safe-to-unmount",
             states: {
-              "safe-to-unmount": {
-                messages: {
-                  OPEN: "preparing-opening",
-                },
-              },
+              "safe-to-unmount": {},
               pending: {
                 messages: {
                   OPEN: [
@@ -136,24 +143,20 @@ export const SHEET_MACHINES = [
                   "": "safe-to-unmount",
                 },
               },
-              "flushing-to-preparing-opening": {
-                messages: { FLUSH_COMPLETE: "preparing-opening" },
-              },
               "flushing-to-preparing-open": {
-                messages: { FLUSH_COMPLETE: "preparing-open" },
+                messages: { "": "preparing-open" },
               },
-              "preparing-opening": {
-                messages: { PREPARED: "openness:opening" },
+              "flushing-to-preparing-opening": {
+                messages: { "": "preparing-opening" },
               },
-              "preparing-open": {
-                messages: { PREPARED: "openness:open" },
-              },
+              "preparing-open": {},
+              "preparing-opening": {},
             },
           },
         ],
       },
       opening: {
-        messages: { ANIMATION_COMPLETE: "open" },
+        messages: { NEXT: "open" },
       },
       open: {
         messages: {
@@ -250,6 +253,14 @@ export const SHEET_MACHINES = [
     states: {
       false: { messages: { STUCK_START: "true" } },
       true: { messages: { STUCK_END: "false" } },
+    },
+  },
+  {
+    name: "elementsReady",
+    initial: "false",
+    states: {
+      false: { messages: { ELEMENTS_REGISTERED: "true" } },
+      true: { messages: { RESET: "false" } },
     },
   },
 ];

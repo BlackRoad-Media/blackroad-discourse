@@ -191,6 +191,9 @@ export default class AnimationTravel {
       if (c.currentState === "closing" && detentIndex === 0) {
         c.handleStateTransition({ type: "ANIMATION_COMPLETE" });
       }
+      if (c.currentState === "opening") {
+        c.handleStateTransition({ type: "NEXT" });
+      }
       return;
     }
 
