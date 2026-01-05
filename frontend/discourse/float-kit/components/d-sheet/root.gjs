@@ -203,7 +203,7 @@ export default class Root extends Component {
 
     this.sheet.stateMachine.subscribe({
       timing: "immediate",
-      state: "closed.safe-to-unmount",
+      state: "closed.status:safe-to-unmount",
       callback: () => this.handleSheetClosed(),
     });
 
