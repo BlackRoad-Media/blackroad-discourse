@@ -41,7 +41,24 @@ export const SHEET_MACHINES = [
     states: {
       none: {
         messages: {
-          OPEN_PREPARED: "opening",
+          OPEN: [
+            {
+              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              target: "opening",
+            },
+            {
+              target: "open",
+            },
+          ],
+          OPEN_PREPARED: [
+            {
+              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              target: "opening",
+            },
+            {
+              target: "open",
+            },
+          ],
           ACTUALLY_CLOSE: {
             guard: GUARD_NAMES.NOT_SKIP_CLOSING,
             target: "closing",
