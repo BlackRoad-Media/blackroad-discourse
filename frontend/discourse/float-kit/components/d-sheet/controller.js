@@ -1982,11 +1982,10 @@ export default class Controller {
 
   /**
    * Open the sheet.
-   * Sends OPEN to staging machine (matches Silk's flow).
    */
   @action
   open() {
-    this.animationStateMachine.send({ type: "OPEN" });
+    this.sheetMachines.send({ type: "OPEN" });
   }
 
   /**
@@ -1994,7 +1993,7 @@ export default class Controller {
    */
   @action
   close() {
-    this.handleStateTransition({ type: "CLOSE" });
+    this.handleStateTransition({ type: "READY_TO_CLOSE" });
   }
 
   /**

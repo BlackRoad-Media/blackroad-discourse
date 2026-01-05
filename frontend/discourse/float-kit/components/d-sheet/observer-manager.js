@@ -150,7 +150,7 @@ export default class ObserverManager {
   #triggerSwipeOut() {
     this.#controller.domAttributes?.disableScrollSnap();
     this.#controller.closingWithoutAnimation = true;
-    this.#controller.handleStateTransition("SWIPE_OUT");
+    this.#controller.handleStateTransition("SWIPED_OUT");
   }
 
   /**

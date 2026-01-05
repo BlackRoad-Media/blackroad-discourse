@@ -124,7 +124,7 @@ export default class StateHelper {
    * Initiate sheet closing.
    */
   initiateClose() {
-    this.stateMachine.send("CLOSE");
+    this.stateMachine.send("READY_TO_CLOSE");
   }
 
   /**
@@ -192,7 +192,7 @@ export default class StateHelper {
    * Trigger swipe-out close.
    */
   swipeOut() {
-    this.stateMachine.send("SWIPE_OUT");
+    this.stateMachine.send("SWIPED_OUT");
   }
 
   /**

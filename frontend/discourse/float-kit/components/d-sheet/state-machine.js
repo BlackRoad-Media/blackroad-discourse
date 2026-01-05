@@ -584,7 +584,9 @@ class StateMachine {
       }
 
       if (transition.guard) {
-        const previousStates = this.toStrings();
+        const previousStates = this.#parentGroup
+          ? this.#parentGroup.toStrings()
+          : this.toStrings();
         const guardPassed = this.#checkGuard(transition.guard, previousStates, message);
         DEBUG.log(
           `tryTransitions: guard "${transition.guard}" -> ${guardPassed}`

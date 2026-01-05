@@ -9,6 +9,8 @@ export const GUARD_NAMES = {
   NOT_SKIP_OPENING: "notSkipOpening",
   SKIP_OPENING: "skipOpening",
   SKIP_CLOSING: "skipClosing",
+  SAFE_TO_UNMOUNT: "safeToUnmount",
+  SAFE_TO_UNMOUNT_AND_NOT_SKIP_OPENING: "safeToUnmountAndNotSkipOpening",
 };
 
 /**
@@ -28,6 +30,12 @@ export const GUARDS = {
     previousStates.includes("skipOpening:true") || message.skipOpening,
   [GUARD_NAMES.SKIP_CLOSING]: (previousStates, message) =>
     previousStates.includes("skipClosing:true") || message.skipClosing,
+  [GUARD_NAMES.SAFE_TO_UNMOUNT]: (previousStates) =>
+    previousStates.includes("openness:closed.status:safe-to-unmount"),
+  [GUARD_NAMES.SAFE_TO_UNMOUNT_AND_NOT_SKIP_OPENING]: (previousStates, message) =>
+    previousStates.includes("openness:closed.status:safe-to-unmount") &&
+    !previousStates.includes("skipOpening:true") &&
+    !message.skipOpening,
 };
 
 /**
@@ -43,10 +51,11 @@ export const SHEET_MACHINES = [
         messages: {
           OPEN: [
             {
-              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              guard: GUARD_NAMES.SAFE_TO_UNMOUNT_AND_NOT_SKIP_OPENING,
               target: "opening",
             },
             {
+              guard: GUARD_NAMES.SAFE_TO_UNMOUNT,
               target: "open",
             },
           ],
@@ -160,9 +169,20 @@ export const SHEET_MACHINES = [
       },
       open: {
         messages: {
-          CLOSE: "closing",
+          ACTUALLY_CLOSE: [
+            {
+              guard: GUARD_NAMES.SKIP_CLOSING,
+              target: "openness:closed.status:pending",
+            },
+          ],
+          SWIPED_OUT: "openness:closed.status:pending",
+          READY_TO_CLOSE: [
+            {
+              guard: GUARD_NAMES.NOT_SKIP_CLOSING,
+              target: "closing",
+            },
+          ],
           STEP: "open",
-          SWIPE_OUT: "openness:closed.status:pending",
         },
         machines: [
           {
