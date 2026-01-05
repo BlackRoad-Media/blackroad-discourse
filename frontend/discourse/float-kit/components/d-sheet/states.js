@@ -6,6 +6,7 @@
  */
 export const GUARD_NAMES = {
   NOT_SKIP_CLOSING: "notSkipClosing",
+  NOT_SKIP_OPENING: "notSkipOpening",
   SKIP_OPENING: "skipOpening",
   SKIP_CLOSING: "skipClosing",
 };
@@ -20,11 +21,13 @@ export const GUARD_NAMES = {
  */
 export const GUARDS = {
   [GUARD_NAMES.NOT_SKIP_CLOSING]: (previousStates, message) =>
-    !message.skipClosing,
+    !previousStates.includes("skipClosing:true") && !message.skipClosing,
+  [GUARD_NAMES.NOT_SKIP_OPENING]: (previousStates, message) =>
+    !previousStates.includes("skipOpening:true") && !message.skipOpening,
   [GUARD_NAMES.SKIP_OPENING]: (previousStates, message) =>
-    message.skipOpening,
+    previousStates.includes("skipOpening:true") || message.skipOpening,
   [GUARD_NAMES.SKIP_CLOSING]: (previousStates, message) =>
-    message.skipClosing,
+    previousStates.includes("skipClosing:true") || message.skipClosing,
 };
 
 /**
@@ -44,13 +47,23 @@ export const SHEET_MACHINES = [
             target: "closing",
           },
           ACTUALLY_STEP: "stepping",
-          GO_DOWN: "going-down",
+          GO_DOWN: [
+            {
+              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              target: "going-down",
+            },
+            {
+              target: "go-down",
+            },
+          ],
           GO_UP: "going-up",
         },
       },
+      open: { messages: { NEXT: "none" } },
       opening: { messages: { NEXT: "none" } },
       stepping: { messages: { NEXT: "none" } },
       closing: { messages: { NEXT: "none" } },
+      "go-down": { messages: { NEXT: "none" } },
       "going-down": { messages: { NEXT: "none" } },
       "going-up": { messages: { NEXT: "none" } },
     },
