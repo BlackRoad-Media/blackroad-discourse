@@ -323,7 +323,7 @@ export default class Controller {
   #subscriptionDefinitions = [
     {
       machine: "stateMachine",
-      state: "preparing-opening",
+      state: "closed.status:preparing-opening",
       handler: "handlePreparingOpening",
     },
     { machine: "stateMachine", state: "opening", handler: "handleOpening" },
@@ -339,17 +339,17 @@ export default class Controller {
     { machine: "stateMachine", state: "closing", handler: "handleClosing" },
     {
       machine: "stateMachine",
-      state: "closed.pending",
+      state: "closed.status:pending",
       handler: "handleClosedPending",
     },
     {
       machine: "stateMachine",
-      state: "closed.safe-to-unmount",
+      state: "closed.status:safe-to-unmount",
       handler: "handleClosedSafeToUnmount",
     },
     {
       machine: "stateMachine",
-      state: "closed.flushing-to-preparing-opening",
+      state: "closed.status:flushing-to-preparing-opening",
       timing: "before-paint",
       callback: () => {
         this.timeoutManager.clear("pendingFlush");
@@ -358,7 +358,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "closed.flushing-to-preparing-open",
+      state: "closed.status:flushing-to-preparing-open",
       timing: "before-paint",
       callback: () => {
         this.timeoutManager.clear("pendingFlush");
@@ -367,7 +367,7 @@ export default class Controller {
     },
     {
       machine: "stateMachine",
-      state: "preparing-open",
+      state: "closed.status:preparing-open",
       handler: "handlePreparingOpen",
     },
     {
@@ -880,18 +880,22 @@ export default class Controller {
   get openness() {
     const state = this.stateMachine.current;
 
-    switch (state) {
-      case "open":
-        return "open";
-      case "closing":
-        return "closing";
-      case "opening":
-      case "preparing-opening":
-      case "preparing-open":
-        return "opening";
-      default:
-        return "closed";
+    if (state === "open") {
+      return "open";
     }
+    if (state === "closing") {
+      return "closing";
+    }
+    if (state === "opening") {
+      return "opening";
+    }
+    if (
+      this.stateMachine.matches("closed.status:preparing-opening") ||
+      this.stateMachine.matches("closed.status:preparing-open")
+    ) {
+      return "opening";
+    }
+    return "closed";
   }
 
   /**
@@ -1225,8 +1229,8 @@ export default class Controller {
    * Triggers dimension calculation and initial animation.
    */
   calculateDimensionsIfReady() {
-    const isPreparingOpening = this.currentState === "preparing-opening";
-    const isPreparingOpen = this.currentState === "preparing-open";
+    const isPreparingOpening = this.stateMachine.matches("closed.status:preparing-opening");
+    const isPreparingOpen = this.stateMachine.matches("closed.status:preparing-open");
     const hasRequiredMarkers =
       this.detentsConfig === undefined || this.detentMarkers.length > 0;
 
