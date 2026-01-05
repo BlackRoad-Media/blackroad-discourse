@@ -279,9 +279,6 @@ export const POSITION_MACHINES = [
         },
       },
       front: {
-        messages: {
-          GO_OUT: "position:out",
-        },
         machines: [
           {
             name: "status",
@@ -334,8 +331,8 @@ export const POSITION_MACHINES = [
               },
               indeterminate: {
                 messages: {
-                  GOTO_COVERED_IDLE: "idle",
-                  GOTO_FRONT_IDLE: "position:front.status:idle",
+                  GOTO_idle: "idle",
+                  GOTO_front: "position:front.status:idle",
                 },
               },
               idle: {
@@ -351,7 +348,7 @@ export const POSITION_MACHINES = [
                   ],
                   READY_TO_GO_UP: "going-up",
                   GO_UP: "indeterminate",
-                  GOTO_FRONT_IDLE: "position:front.status:idle",
+                  GOTO_front: "position:front.status:idle",
                 },
               },
               "come-back": {
