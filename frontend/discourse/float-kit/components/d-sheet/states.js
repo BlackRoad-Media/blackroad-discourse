@@ -64,6 +64,22 @@ export const SHEET_MACHINES = [
     },
   },
   {
+    name: "skipOpening",
+    initial: "false",
+    states: {
+      true: { messages: { TO_FALSE: "false" } },
+      false: { messages: { TO_TRUE: "true" } },
+    },
+  },
+  {
+    name: "skipClosing",
+    initial: "false",
+    states: {
+      true: { messages: { TO_FALSE: "false" } },
+      false: { messages: { TO_TRUE: "true" } },
+    },
+  },
+  {
     name: "openness",
     initial: "closed.safe-to-unmount",
     states: {
@@ -172,6 +188,24 @@ export const SHEET_MACHINES = [
     states: {
       ended: { messages: { TOUCH_START: "ongoing" } },
       ongoing: { messages: { TOUCH_END: "ended" } },
+    },
+  },
+  {
+    name: "backStuck",
+    silentOnly: true,
+    initial: "false",
+    states: {
+      false: { messages: { STUCK_START: "true" } },
+      true: { messages: { STUCK_END: "false" } },
+    },
+  },
+  {
+    name: "frontStuck",
+    silentOnly: true,
+    initial: "false",
+    states: {
+      false: { messages: { STUCK_START: "true" } },
+      true: { messages: { STUCK_END: "false" } },
     },
   },
 ];
