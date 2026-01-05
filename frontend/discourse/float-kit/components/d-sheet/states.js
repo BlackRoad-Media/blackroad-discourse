@@ -94,41 +94,66 @@ export const SHEET_MACHINES = [
   },
   {
     name: "openness",
-    initial: "closed.safe-to-unmount",
+    initial: "closed",
     states: {
       closed: {
-        initial: "safe-to-unmount",
-        messages: { OPEN: "preparing-opening" },
-        states: {
-          "safe-to-unmount": {},
-          pending: {
-            messages: {
-              OPEN: [
-                {
-                  guard: GUARD_NAMES.SKIP_OPENING,
-                  target: "openness:closed.flushing-to-preparing-open",
+        messages: {
+          OPEN: [
+            {
+              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              target: "opening",
+            },
+            {
+              target: "open",
+            },
+          ],
+        },
+        machines: [
+          {
+            name: "status",
+            initial: "safe-to-unmount",
+            states: {
+              "safe-to-unmount": {
+                messages: {
+                  OPEN: "openness:closed.status:preparing-opening",
                 },
-                { target: "openness:closed.flushing-to-preparing-opening" },
-              ],
-              FLUSH_COMPLETE: "openness:closed.safe-to-unmount",
+              },
+              pending: {
+                messages: {
+                  OPEN: [
+                    {
+                      guard: GUARD_NAMES.SKIP_OPENING,
+                      target: "flushing-to-preparing-open",
+                    },
+                    { target: "flushing-to-preparing-opening" },
+                  ],
+                  "": "safe-to-unmount",
+                },
+              },
+              "flushing-to-preparing-opening": {
+                messages: { FLUSH_COMPLETE: "preparing-opening" },
+              },
+              "flushing-to-preparing-open": {
+                messages: { FLUSH_COMPLETE: "preparing-open" },
+              },
+              "preparing-opening": {
+                messages: { PREPARED: "openness:opening" },
+              },
+              "preparing-open": {
+                messages: { PREPARED: "openness:open" },
+              },
             },
           },
-          "flushing-to-preparing-opening": {
-            messages: { FLUSH_COMPLETE: "openness:preparing-opening" },
-          },
-          "flushing-to-preparing-open": {
-            messages: { FLUSH_COMPLETE: "openness:preparing-open" },
-          },
-        },
+        ],
       },
-      "preparing-opening": { messages: { PREPARED: "opening" } },
-      "preparing-open": { messages: { PREPARED: "open" } },
-      opening: { messages: { ANIMATION_COMPLETE: "open" } },
+      opening: {
+        messages: { ANIMATION_COMPLETE: "open" },
+      },
       open: {
         messages: {
           CLOSE: "closing",
           STEP: "open",
-          SWIPE_OUT: "openness:closed.pending",
+          SWIPE_OUT: "openness:closed.status:pending",
         },
         machines: [
           {
@@ -143,7 +168,7 @@ export const SHEET_MACHINES = [
                     initial: "false",
                     states: {
                       false: { messages: { OCCURRED: "true" } },
-                      true: { messages: { RESET: "false" } },
+                      true: {},
                     },
                   },
                 ],
@@ -191,7 +216,7 @@ export const SHEET_MACHINES = [
           },
         ],
       },
-      closing: { messages: { ANIMATION_COMPLETE: "openness:closed.pending" } },
+      closing: { messages: { ANIMATION_COMPLETE: "openness:closed.status:pending" } },
     },
   },
   {
