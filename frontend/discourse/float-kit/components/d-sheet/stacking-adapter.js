@@ -184,4 +184,48 @@ export default class StackingAdapter {
       parentSheet.sendToPositionMachine("NEXT");
     }
   }
+
+  /**
+   * Update this sheet's staging state in the stack registry.
+   *
+   * @param {string} staging - The staging state ("none", "opening", "closing", etc.)
+   */
+  updateStagingInStack(staging) {
+    if (!this.isStackEnabled) {
+      return;
+    }
+
+    this.registry.updateSheetStagingInStack(
+      this.stackId,
+      this.controller.sheetId,
+      staging
+    );
+  }
+
+  /**
+   * Remove this sheet's staging data from the stack registry.
+   */
+  removeStagingFromStack() {
+    if (!this.isStackEnabled) {
+      return;
+    }
+
+    this.registry.removeSheetStagingFromStack(
+      this.stackId,
+      this.controller.sheetId
+    );
+  }
+
+  /**
+   * Get the merged staging state for the stack.
+   *
+   * @returns {string} "none" or "not-none"
+   */
+  getMergedStaging() {
+    if (!this.isStackEnabled) {
+      return "none";
+    }
+
+    return this.registry.getMergedStagingForStack(this.stackId);
+  }
 }

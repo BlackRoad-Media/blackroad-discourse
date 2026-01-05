@@ -113,6 +113,7 @@ export default class View extends Component {
         (if (not @sheet.inertOutside) "no-pointer-events")
         @sheet.effectiveSwipeTrapClass
         (concat "staging-" @sheet.animationState)
+        (concat "merged-staging-" @sheet.mergedStaging)
         (concat "openness-" @sheet.openness)
         "sheet-root"
         (if @sheet.isFocusable "focusable")

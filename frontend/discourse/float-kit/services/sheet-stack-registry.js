@@ -18,6 +18,9 @@ export default class SheetStackRegistry extends Service {
   /** @type {TrackedMap<string, number>} */
   stackingCounts = new TrackedMap();
 
+  /** @type {TrackedMap<string, Map<string, string>>} */
+  stackStagingData = new TrackedMap();
+
   /**
    * Register a new stack.
    *
@@ -42,6 +45,7 @@ export default class SheetStackRegistry extends Service {
 
     this.stacks.set(id, stackObject);
     this.stackSheets.set(id, []);
+    this.stackStagingData.set(id, new Map());
     return id;
   }
 
@@ -54,6 +58,7 @@ export default class SheetStackRegistry extends Service {
     this.stacks.delete(stackId);
     this.stackSheets.delete(stackId);
     this.stackingCounts.delete(stackId);
+    this.stackStagingData.delete(stackId);
   }
 
   /**
@@ -377,5 +382,61 @@ export default class SheetStackRegistry extends Service {
     const newCount = Math.max(0, currentCount - 1);
     this.stackingCounts.set(stackId, newCount);
     return newCount;
+  }
+
+  /**
+   * Update a sheet's staging state in the stack.
+   *
+   * @param {string} stackId
+   * @param {string} sheetId
+   * @param {string} staging - The staging state ("none", "opening", "closing", etc.)
+   */
+  updateSheetStagingInStack(stackId, sheetId, staging) {
+    const stagingData = this.stackStagingData.get(stackId);
+    if (!stagingData) {
+      return;
+    }
+
+    stagingData.set(sheetId, staging);
+    this.stackStagingData.set(stackId, new Map(stagingData));
+  }
+
+  /**
+   * Remove a sheet's staging data from the stack.
+   *
+   * @param {string} stackId
+   * @param {string} sheetId
+   */
+  removeSheetStagingFromStack(stackId, sheetId) {
+    const stagingData = this.stackStagingData.get(stackId);
+    if (!stagingData) {
+      return;
+    }
+
+    stagingData.delete(sheetId);
+    this.stackStagingData.set(stackId, new Map(stagingData));
+  }
+
+  /**
+   * Get the merged staging state for a stack.
+   * Returns "not-none" if any sheet in the stack has staging !== "none",
+   * otherwise returns "none".
+   *
+   * @param {string} stackId
+   * @returns {string} "none" or "not-none"
+   */
+  getMergedStagingForStack(stackId) {
+    const stagingData = this.stackStagingData.get(stackId);
+    if (!stagingData || stagingData.size === 0) {
+      return "none";
+    }
+
+    for (const staging of stagingData.values()) {
+      if (staging !== "none") {
+        return "not-none";
+      }
+    }
+
+    return "none";
   }
 }

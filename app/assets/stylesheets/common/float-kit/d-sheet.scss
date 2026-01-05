@@ -186,7 +186,7 @@ html[data-d-sheet-native-page-scroll-replaced="false"]:has(
 
 // Like Silk (0aj + a5 + aNp, lines 302-305): During animation, secondary scroll trap captures touch events.
 // This prevents touch events from propagating to body when sheet isn't ready.
-[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
+[data-d-sheet~="view"]:not([data-d-sheet~="merged-staging-none"])
   [data-d-sheet~="secondary-scroll-trap"][data-d-sheet~="no-pointer-events"] {
   z-index: 1;
   pointer-events: auto !important;

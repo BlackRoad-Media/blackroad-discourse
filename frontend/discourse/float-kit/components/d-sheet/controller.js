@@ -554,6 +554,54 @@ export default class Controller {
         this.isMoveOngoing = false;
       },
     },
+    {
+      machine: "animationStateMachine",
+      state: "none",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("none"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "opening",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("opening"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "open",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("open"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "stepping",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("stepping"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "closing",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("closing"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "go-down",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("go-down"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "going-down",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("going-down"),
+    },
+    {
+      machine: "animationStateMachine",
+      state: "going-up",
+      timing: "immediate",
+      callback: () => this.stackingAdapter?.updateStagingInStack("going-up"),
+    },
   ];
 
   /**
@@ -969,6 +1017,16 @@ export default class Controller {
    */
   get animationState() {
     return this.animationStateMachine.current;
+  }
+
+  /**
+   * Merged staging state for the stack.
+   * Returns "not-none" if ANY sheet in the stack has staging !== "none".
+   *
+   * @type {string}
+   */
+  get mergedStaging() {
+    return this.stackingAdapter?.getMergedStaging() ?? "none";
   }
 
   /**
@@ -1510,6 +1568,7 @@ export default class Controller {
     this.positionMachine.cleanup();
     this.touchMachine.cleanup();
     this.longRunningMachine.cleanup();
+    this.stackingAdapter?.removeStagingFromStack();
   }
 
   /**
