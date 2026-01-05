@@ -103,14 +103,10 @@ export default class StateHelper {
 
   /**
    * Complete the enter/exit animation.
-   * Sends NEXT for opening, ANIMATION_COMPLETE for closing.
+   * Sends NEXT for both opening and closing.
    */
   completeAnimation() {
-    if (this.isOpening) {
-      this.stateMachine.send("NEXT");
-    } else {
-      this.stateMachine.send("ANIMATION_COMPLETE");
-    }
+    this.stateMachine.send("NEXT");
   }
 
   /**

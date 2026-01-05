@@ -373,7 +373,7 @@ export default class Controller {
       state: "open",
       guard: () => {
         const msg = this.stateMachine.lastProcessedMessage;
-        return ["NEXT", "ANIMATION_COMPLETE", "PREPARED", "STEP", "READY_TO_OPEN"].includes(msg?.type);
+        return ["NEXT", "PREPARED", "STEP", "READY_TO_OPEN"].includes(msg?.type);
       },
       callback: (message) => this.handleOpen(message),
     },
@@ -1222,7 +1222,7 @@ export default class Controller {
     });
 
     requestAnimationFrame(() => {
-      this.handleStateTransition({ type: "ANIMATION_COMPLETE" });
+      this.handleStateTransition({ type: "NEXT" });
     });
   }
 

@@ -189,7 +189,7 @@ export default class AnimationTravel {
       !hasProgressValues
     ) {
       if (c.currentState === "closing" && detentIndex === 0) {
-        c.handleStateTransition({ type: "ANIMATION_COMPLETE" });
+        c.handleStateTransition({ type: "NEXT" });
       }
       if (c.currentState === "opening") {
         c.handleStateTransition({ type: "NEXT" });

@@ -7,6 +7,8 @@
 export const GUARD_NAMES = {
   NOT_SKIP_CLOSING: "notSkipClosing",
   NOT_SKIP_OPENING: "notSkipOpening",
+  NOT_SKIP_CLOSING_MSG: "notSkipClosingMsg",
+  NOT_SKIP_OPENING_MSG: "notSkipOpeningMsg",
   SKIP_OPENING: "skipOpening",
   SKIP_CLOSING: "skipClosing",
   SAFE_TO_UNMOUNT: "safeToUnmount",
@@ -26,6 +28,10 @@ export const GUARDS = {
     !previousStates.includes("skipClosing:true") && !message.skipClosing,
   [GUARD_NAMES.NOT_SKIP_OPENING]: (previousStates, message) =>
     !previousStates.includes("skipOpening:true") && !message.skipOpening,
+  [GUARD_NAMES.NOT_SKIP_CLOSING_MSG]: (previousStates, message) =>
+    !message.skipClosing,
+  [GUARD_NAMES.NOT_SKIP_OPENING_MSG]: (previousStates, message) =>
+    !message.skipOpening,
   [GUARD_NAMES.SKIP_OPENING]: (previousStates, message) =>
     previousStates.includes("skipOpening:true") || message.skipOpening,
   [GUARD_NAMES.SKIP_CLOSING]: (previousStates, message) =>
@@ -75,7 +81,7 @@ export const SHEET_MACHINES = [
           ACTUALLY_STEP: "stepping",
           GO_DOWN: [
             {
-              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              guard: GUARD_NAMES.NOT_SKIP_OPENING_MSG,
               target: "going-down",
             },
             {
@@ -126,7 +132,7 @@ export const SHEET_MACHINES = [
         messages: {
           READY_TO_OPEN: [
             {
-              guard: GUARD_NAMES.NOT_SKIP_OPENING,
+              guard: GUARD_NAMES.NOT_SKIP_OPENING_MSG,
               target: "opening",
             },
             {
@@ -178,7 +184,7 @@ export const SHEET_MACHINES = [
           SWIPED_OUT: "openness:closed.status:pending",
           READY_TO_CLOSE: [
             {
-              guard: GUARD_NAMES.NOT_SKIP_CLOSING,
+              guard: GUARD_NAMES.NOT_SKIP_CLOSING_MSG,
               target: "closing",
             },
           ],
@@ -245,7 +251,7 @@ export const SHEET_MACHINES = [
           },
         ],
       },
-      closing: { messages: { ANIMATION_COMPLETE: "openness:closed.status:pending" } },
+      closing: { messages: { NEXT: "openness:closed.status:pending" } },
     },
   },
   {
