@@ -249,14 +249,14 @@ export default class StateHelper {
    * Go to front idle state.
    */
   goToFrontIdle() {
-    this.positionMachine.send("GOTO_FRONT_IDLE");
+    this.positionMachine.send("GOTO_front");
   }
 
   /**
    * Go to covered idle state.
    */
   goToCoveredIdle() {
-    this.positionMachine.send("GOTO_COVERED_IDLE");
+    this.positionMachine.send("GOTO_idle");
   }
 
   /**
@@ -342,7 +342,8 @@ export default class StateHelper {
   get isOpening() {
     return (
       this.stateMachine.current === "opening" ||
-      this.stateMachine.current === "preparing-opening"
+      this.stateMachine.matches("closed.status:preparing-opening") ||
+      this.stateMachine.matches("closed.status:preparing-open")
     );
   }
 
@@ -397,7 +398,16 @@ export default class StateHelper {
    * @returns {boolean}
    */
   isClosedPending() {
-    return this.stateMachine.matches("closed.pending");
+    return this.stateMachine.matches("closed.status:pending");
+  }
+
+  /**
+   * Check if in closed.safe-to-unmount state.
+   *
+   * @returns {boolean}
+   */
+  isClosedSafeToUnmount() {
+    return this.stateMachine.matches("closed.status:safe-to-unmount");
   }
 
   /**
