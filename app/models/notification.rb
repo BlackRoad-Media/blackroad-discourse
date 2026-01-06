@@ -23,7 +23,7 @@ class Notification < ActiveRecord::Base
   scope :visible,
         lambda {
           joins("LEFT JOIN topics ON notifications.topic_id = topics.id").where(
-            "topics.id IS NULL OR topics.deleted_at IS NULL",
+            "notifications.topic_id IS NULL OR (topics.id IS NOT NULL AND topics.deleted_at IS NULL)",
           )
         }
   scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
@@ -51,11 +51,6 @@ class Notification < ActiveRecord::Base
           end
 
           scope.order("notifications.created_at DESC")
-        end
-
-  scope :for_user_menu,
-        ->(user_id, limit: 30) do
-          where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
         end
 
   attr_accessor :skip_send_email
@@ -196,6 +191,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.interesting_after(min_date)
+    Discourse.deprecate(
+      "Notification.interesting_after is deprecated. Use NotificationQuery instead.",
+      drop_from: "3.5.0",
+    )
     result =
       where("created_at > ?", min_date)
         .includes(:topic)
@@ -236,8 +235,12 @@ class Notification < ActiveRecord::Base
   end
 
   def self.filter_inaccessible_topic_notifications(guardian, notifications)
+    Discourse.deprecate(
+      "Notification.filter_inaccessible_topic_notifications is deprecated. Use NotificationQuery instead which applies visibility filters in SQL.",
+      drop_from: "3.5.0",
+    )
     topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
-    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
+    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids:)
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
   end
 
@@ -275,6 +278,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.prioritized_list(user, count: 30, types: [])
+    Discourse.deprecate(
+      "Notification.prioritized_list is deprecated. Use NotificationQuery#prioritized_list instead.",
+      drop_from: "3.5.0",
+    )
     return [] if !user&.user_option
 
     notifications =
@@ -297,6 +304,10 @@ class Notification < ActiveRecord::Base
   end
 
   def self.recent_report(user, count = nil, types = [])
+    Discourse.deprecate(
+      "Notification.recent_report is deprecated. Use NotificationQuery instead.",
+      drop_from: "3.5.0",
+    )
     return unless user && user.user_option
 
     count ||= 10
