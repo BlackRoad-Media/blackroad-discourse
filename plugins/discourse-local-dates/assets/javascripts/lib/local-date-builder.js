@@ -13,7 +13,7 @@ const TIME_ICON = "clock";
 const SHORT_FORMAT_DAYS_PERIOD = 1;
 
 export default class LocalDateBuilder {
-  constructor(params = {}, localTimezone) {
+  constructor(params = {}, localTimezone, options = {}) {
     this.time = params.time;
     this.date = params.date;
     this.recurring = params.recurring;
@@ -29,6 +29,7 @@ export default class LocalDateBuilder {
     this.countdown = params.countdown;
     this.duration = params.duration;
     this.localTimezone = localTimezone;
+    this.profileTimezone = options.profileTimezone;
   }
 
   build() {
@@ -159,6 +160,13 @@ export default class LocalDateBuilder {
     );
   }
 
+  _hasProfileTimezoneMismatch() {
+    if (!this.profileTimezone) {
+      return false;
+    }
+    return !this._isEqualZones(this.profileTimezone, this.localTimezone);
+  }
+
   _createDateTimeRange(startRange, time, duration) {
     const [startDate, endDate] = this._calculateDatesForRange(
       startRange,
@@ -226,6 +234,7 @@ export default class LocalDateBuilder {
       displayedTimezone,
       this.localTimezone
     );
+    const forceShowTimezone = this._hasProfileTimezoneMismatch();
 
     if (this.calendar) {
       const inCalendarRange = moment
@@ -239,7 +248,7 @@ export default class LocalDateBuilder {
         return this._timeOnlyFormat(localDate, displayedTimezone);
       }
 
-      if (inCalendarRange && sameTimezone) {
+      if (inCalendarRange && sameTimezone && !forceShowTimezone) {
         const date = localDate.datetimeWithZone(this.localTimezone);
 
         if (hasTime && date.hours() === 0 && date.minutes() === 0) {
@@ -253,7 +262,7 @@ export default class LocalDateBuilder {
       }
     }
 
-    if (!sameTimezone) {
+    if (!sameTimezone || forceShowTimezone) {
       return this._formatWithZone(localDate, displayedTimezone, this.format);
     }
 
