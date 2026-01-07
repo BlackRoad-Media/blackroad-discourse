@@ -442,6 +442,7 @@ sk:
         github_pull_request_diff: "Rozdiel v žiadostiach o stiahnutie z GitHubu"
         random_picker: "Náhodný výber"
         categories: "Zoznam kategórií"
+        flag_post: "Príspevok s vlajkou"
         search: "Hľadať"
         tags: "Zoznam značiek"
         time: "Čas"

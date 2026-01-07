@@ -442,6 +442,7 @@ tr_TR:
         github_pull_request_diff: "GitHub çekme talebi farkı"
         random_picker: "Rastgele Seçici"
         categories: "Kategorileri listele"
+        flag_post: "Gönderiye bayrak ekle"
         search: "Ara"
         tags: "Etiketleri listele"
         time: "Saat"

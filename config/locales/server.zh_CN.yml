@@ -2404,6 +2404,7 @@ zh_CN:
     content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己主题和帖子的本地化内容。"
     enable_upcoming_changes: "启用即将到来的更改"
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
+    experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"
@@ -3632,8 +3633,6 @@ zh_CN:
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
-  email_from: "%{user_name} 通过 %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "以前的回复"
     reached_limit:

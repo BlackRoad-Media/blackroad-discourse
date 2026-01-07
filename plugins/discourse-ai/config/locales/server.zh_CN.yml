@@ -499,6 +499,7 @@ zh_CN:
         github_pull_request_diff: "GitHub 拉取请求差异"
         random_picker: "随机选择器"
         categories: "列出类别"
+        flag_post: "标记帖子"
         search: "搜索"
         tags: "列出标签"
         time: "时间"

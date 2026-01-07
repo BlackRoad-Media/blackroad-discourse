@@ -3858,8 +3858,6 @@ sk:
     Ak chceš zrušiť odber týchto e-mailov, [klikni sem](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} cez %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Prechádzajúce odpovede"
     reached_limit:

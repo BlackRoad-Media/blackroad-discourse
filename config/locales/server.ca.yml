@@ -2067,7 +2067,6 @@ ca:
     Per a cancel·lar la subscripció a aquests correus, [feu clic aquí](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "Respostes anteriors"
     reached_limit:

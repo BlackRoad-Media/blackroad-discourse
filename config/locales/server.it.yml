@@ -3530,8 +3530,6 @@ it:
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:

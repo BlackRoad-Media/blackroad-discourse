@@ -1286,7 +1286,6 @@ sl:
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
     Za odjavo od takšnih e-sporočil [kliknite tukaj](%{unsubscribe_url}).
-  email_from: "%{user_name} preko %{site_name}"
   user_notifications:
     previous_discussion: "Prejšnji odgovori"
     reached_limit:

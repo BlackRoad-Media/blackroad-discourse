@@ -4056,8 +4056,6 @@ ar:
     لإلغاء الاشتراك من هذه الرسائل الإلكترونية، [انقر هنا](%{unsubscribe_url}).
   subject_re: "بخصوص: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} عبر %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "الردود السابقة"
     reached_limit:

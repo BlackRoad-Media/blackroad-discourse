@@ -442,6 +442,7 @@ fr:
         github_pull_request_diff: "Diff des pull requests GitHub"
         random_picker: "Sélecteur aléatoire"
         categories: "Répertorier les catégories"
+        flag_post: "Signaler cette publication"
         search: "Rechercher"
         tags: "Répertorier les étiquettes"
         time: "Heure"

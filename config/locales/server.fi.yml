@@ -3648,8 +3648,6 @@ fi:
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   subject_re: "VS:"
   subject_pm: "[YV]"
-  email_from: "%{user_name} sivustolta %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Edelliset vastaukset"
     reached_limit:

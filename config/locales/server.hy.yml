@@ -2075,7 +2075,6 @@ hy:
     Այս էլ. նամակների բաժանորդագրումից դուրս գալու համար, [սեղմեք այստեղ](%{unsubscribe_url}):
   subject_re: "Re: "
   subject_pm: "[Անձնական Նամակ] "
-  email_from: "%{user_name} -ը %{site_name} -ի միջոցով"
   user_notifications:
     previous_discussion: "Նախորդ Պատասխանները"
     reached_limit:

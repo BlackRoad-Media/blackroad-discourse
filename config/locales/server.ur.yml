@@ -2748,8 +2748,6 @@ ur:
     اِن ای میلز سے غیر سبسکرائب کرنے کیلئے، [یہاں کلِک کریں](%{unsubscribe_url})۔
   subject_re: "جواب: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} بذریعہ %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "پچھلے جوابات"
     reached_limit:

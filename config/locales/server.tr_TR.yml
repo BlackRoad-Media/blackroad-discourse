@@ -3637,8 +3637,6 @@ tr_TR:
     Bu e-posta aboneliğinden çıkmak için [buraya tıklayın](%{unsubscribe_url}).
   subject_re: "Ynt: "
   subject_pm: "[Kişisel Mesaj] "
-  email_from: "%{user_name} ile %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Önceki Yanıtlar"
     reached_limit:

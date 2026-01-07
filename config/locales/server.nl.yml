@@ -3642,8 +3642,6 @@ nl:
     [Klik hier](%{unsubscribe_url}) om je af te melden voor deze e-mails.
   subject_re: "Re:"
   subject_pm: "[PB]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Eerdere antwoorden"
     reached_limit:

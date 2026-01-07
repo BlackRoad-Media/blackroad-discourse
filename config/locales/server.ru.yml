@@ -3876,8 +3876,6 @@ ru:
     [Нажмите сюда](%{unsubscribe_url}), чтобы отписаться от таких писем.
   subject_re: "Re: "
   subject_pm: "[ЛС] "
-  email_from: "%{user_name} через %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Предыдущие ответы"
     reached_limit:

@@ -2089,7 +2089,6 @@ zh_TW:
     要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   subject_re: "回覆："
   subject_pm: "[私訊]"
-  email_from: "%{user_name}透過%{site_name}"
   user_notifications:
     previous_discussion: "之前的回覆"
     reached_limit:

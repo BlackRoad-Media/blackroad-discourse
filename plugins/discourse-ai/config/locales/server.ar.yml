@@ -445,6 +445,7 @@ ar:
         github_pull_request_diff: "الفروقات في طلب السحب على GitHub"
         random_picker: "منتقي عشوائي"
         categories: "إدراج الفئات"
+        flag_post: "الإبلاغ عن المنشور"
         search: "البحث"
         tags: "إدراج الوسوم"
         time: "الوقت"

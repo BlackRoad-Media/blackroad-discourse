@@ -458,6 +458,7 @@ ru:
         github_pull_request_diff: "Сравнение изменений в запросе на вытягивание на GitHub"
         random_picker: "Случайный выбор"
         categories: "Вывод списка категорий"
+        flag_post: "Пометить публикацию"
         search: "Искать"
         tags: "Вывод списка тегов"
         time: "Время"

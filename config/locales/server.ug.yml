@@ -3607,8 +3607,6 @@ ug:
     بۇ ئېلخەت مۇشتەرىلىكىنى بىكار قىلماقچى بولسىڭىز، [بۇ جاينى چېكىڭ](%{unsubscribe_url}).
   subject_re: "جاۋاب: "
   subject_pm: "[شەخسىي ئۇچۇر] "
-  email_from: "%{user_name} %{site_name} ئارقىلىق"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "ئالدىنقى جاۋاب"
     reached_limit:

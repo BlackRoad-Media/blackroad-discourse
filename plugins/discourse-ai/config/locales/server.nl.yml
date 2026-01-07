@@ -442,6 +442,7 @@ nl:
         github_pull_request_diff: "GitHub pullverzoek-diff"
         random_picker: "Willekeurige kiezer"
         categories: "Categorieën weergeven"
+        flag_post: "Bericht markeren"
         search: "Zoeken"
         tags: "Tags weergeven"
         time: "Tijd"

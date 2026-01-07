@@ -442,6 +442,7 @@ fi:
         github_pull_request_diff: "GitHub-vetopyyntöero"
         random_picker: "Satunnainen valitsin"
         categories: "Listaa alueet"
+        flag_post: "Liputa viesti"
         search: "Hae"
         tags: "Listaa tunnisteet"
         time: "Aika"

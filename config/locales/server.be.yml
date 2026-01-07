@@ -1603,7 +1603,6 @@ be:
   unsubscribe_mailing_list: "Вы атрымліваеце гэта таму, што вы ўключылі рэжым спісу \n\nрассылання. Каб адмовіцца ад гэтых лістоў, [націсніце тут]%{unsubscribe_url}).\n"
   subject_re: "Re:"
   subject_pm: "[PM]"
-  email_from: "%{user_name} via %{site_name}"
   user_notifications:
     previous_discussion: "папярэднія адказы"
     in_reply_to: "У адказ на"

@@ -442,6 +442,7 @@ pt_BR:
         github_pull_request_diff: "Diferença de solicitação pull do GitHub"
         random_picker: "Seletor aleatório"
         categories: "Listar categorias"
+        flag_post: "Sinalizar postagem"
         search: "Pesquisar"
         tags: "Listar etiquetas"
         time: "Hora"

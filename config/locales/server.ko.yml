@@ -40,7 +40,7 @@ ko:
   title: "Discourse"
   topics: "토픽"
   posts: "포스트"
-  views: "조회수"
+  views: "조회"
   loading: "로드 중"
   powered_by_html: '<a href="https://www.discourse.org">Discourse</a>를 사용합니다. JavaScript가 활성화된 상태에서 가장 잘 보입니다.'
   sign_up: "회원가입"
@@ -2648,7 +2648,6 @@ ko:
     이러한 이메일을 구독 해제하려면 [여기를 클릭하세요](%{unsubscribe_url}).
   subject_re: "덧: "
   subject_pm: "[PM] "
-  email_from: "%{site_name}의 %{user_name} 님"
   user_notifications:
     previous_discussion: "이전 답장"
     reached_limit:

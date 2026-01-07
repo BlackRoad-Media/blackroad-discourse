@@ -1937,8 +1937,6 @@ te:
       title: "వరుసలో ఉన్న పోస్ట్‌ల రిమైండర్"
   subject_re: "ప్ర: "
   subject_pm: "[PM] "
-  email_from: "%{user_name} %{site_name} ద్వారా"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "గత జవాబులు"
     in_reply_to: "సమాధానముగా"

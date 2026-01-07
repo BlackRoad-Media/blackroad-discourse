@@ -442,6 +442,7 @@ it:
         github_pull_request_diff: "Diff richiesta pull GitHub"
         random_picker: "Selettore casuale"
         categories: "Elenca le categorie"
+        flag_post: "Segnala messaggio"
         search: "Cerca"
         tags: "Elenca le etichette"
         time: "Ora"

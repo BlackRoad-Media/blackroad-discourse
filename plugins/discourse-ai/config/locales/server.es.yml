@@ -442,6 +442,7 @@ es:
         github_pull_request_diff: "Diferencia de solicitud de extracción de GitHub"
         random_picker: "Selector aleatorio"
         categories: "Lista de categorías"
+        flag_post: "Denunciar publicación"
         search: "Buscar"
         tags: "Listar etiquetas"
         time: "Hora"
