@@ -137,6 +137,9 @@ sv:
       placeholder: datum
       from_placeholder: "från-datum"
       to_placeholder: "till-datum"
+    languages:
+      ur:
+        name: Urdu
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
